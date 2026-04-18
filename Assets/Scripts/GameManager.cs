@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     private InputAction clearHighScoreAction;
     
     private float playerTimer = 0.0f;
-    private bool isGameOver = false;
+    public static bool isGameOver = false;
     private PlayerController player;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
