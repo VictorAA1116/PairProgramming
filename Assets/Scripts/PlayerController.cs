@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Numerics;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -9,16 +8,24 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float turnSpeed = 50f;
+    
     private bool hasBoost = false;
+    private float boostMultiplier = 2.0f;
+    private float boostDuration = 1.0f;
+    private float turnRateBoostMultiplier = 2.0f;
+    
     private int currentLap = 0;
     public static UnityEvent OnPlayerCompletedLap = new UnityEvent();
     
     [SerializeField] private InputActionAsset inputActions;
     private InputAction moveAction;
     private InputAction boostAction;
+    private Rigidbody rb;
 
     private void Awake()
     {
+        rb = GetComponent<Rigidbody>();
+        
         if (!inputActions) return;
 
         moveAction = inputActions.FindAction("Player/Move");
@@ -34,14 +41,13 @@ public class PlayerController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         if (moveAction != null && moveAction.ReadValue<Vector2>().magnitude > 0.1f)
         {
             Vector2 moveInput = moveAction.ReadValue<Vector2>();
             
             transform.position += transform.forward * moveInput.y * Time.deltaTime * moveSpeed;
-            
             transform.Rotate(0, moveInput.x * Time.deltaTime * turnSpeed, 0);
         }
         
@@ -53,16 +59,22 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator UseBoost()
     {
-        moveSpeed *= 1.5f;
+        moveSpeed *= boostMultiplier;
+        turnSpeed *= turnRateBoostMultiplier;
         hasBoost = false;
         
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(boostDuration);
         
-        moveSpeed /= 1.5f;
+        moveSpeed /= boostMultiplier;
+        turnSpeed /= turnRateBoostMultiplier;
     }
 
-    public void AddBoost()
+    public void AddBoost(float boostMultiplier, float boostDuration, float turnRateBoostMultiplier)
     {
+        this.boostMultiplier = boostMultiplier;
+        this.boostDuration = boostDuration;
+        this.turnRateBoostMultiplier = turnRateBoostMultiplier;
+        
         hasBoost = true;
     }
     
@@ -75,5 +87,10 @@ public class PlayerController : MonoBehaviour
     public int GetCurrentLap()
     {
         return currentLap;
+    }
+    
+    public bool GetHasBoost()
+    {
+        return hasBoost;
     }
 }

@@ -3,6 +3,10 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider))]
 public class BoostCollectable : MonoBehaviour
 {
+    [SerializeField] float boostMultiplier = 2.0f;
+    [SerializeField] float turnRateBoostMultiplier = 2.0f;
+    [SerializeField] float boostDuration = 5.0f;
+    
     BoxCollider collider;
     private void Awake()
     {
@@ -16,9 +20,10 @@ public class BoostCollectable : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         PlayerController player = other.gameObject.GetComponent<PlayerController>();
-        if (player)
+        
+        if (player && !player.GetHasBoost())
         {
-            player.AddBoost();
+            player.AddBoost(boostMultiplier, boostDuration,  turnRateBoostMultiplier);
             Destroy(gameObject);
         }
     }
