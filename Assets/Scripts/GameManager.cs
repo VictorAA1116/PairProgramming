@@ -140,6 +140,8 @@ public class GameManager : MonoBehaviour
     private void RestartGame()
     {
         Time.timeScale = 1.0f;
+        isGameOver = false;
+        gameOverUI.SetActive(false);
         restartButton.onClick.RemoveAllListeners();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
