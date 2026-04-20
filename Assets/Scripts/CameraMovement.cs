@@ -7,12 +7,6 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private float lookOffset = 1.0f;
     [SerializeField] private float moveSmoothSpeed = 8.0f;
     [SerializeField] private float rotationSmoothSpeed = 10.0f;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-
-    }
     
     void LateUpdate()
     {

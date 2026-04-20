@@ -13,17 +13,10 @@ public class BoostSpawner : MonoBehaviour
     private float currentInterval = 10.0f;
     PlayerController player;
     
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        player = FindAnyObjectByType<PlayerController>();
+        player = PlayerController.Instance; // optimized
         StartCoroutine(SpawnRoutine());
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     private IEnumerator SpawnRoutine()
@@ -34,8 +27,13 @@ public class BoostSpawner : MonoBehaviour
             yield return new WaitForSeconds(currentInterval);
             
             bool validPosition = false;
-            while (!validPosition)
+            int attempts = 0; // optimized
+            int maxAttempts = 10; // optimized
+            
+            while (!validPosition && attempts < maxAttempts) // optimized
             {
+                attempts++; // optimized
+                
                 float range = Random.Range(minRangeFromPlayer, maxRangeFromPlayer);
             
                 Vector3 desiredSpawnPosition = player.transform.position + player.transform.forward * range + Vector3.up * 100f;
